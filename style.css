@@ -53,3 +53,47 @@ footer .brand>span>span{font-family:'Playfair Display',Georgia,serif;font-style:
 #booking-dialog .booking-bar strong{margin-right:auto}
 #booking-dialog .booking-open{font-size:12.5px;color:#75646d;text-decoration:underline;white-space:nowrap}
 @media(max-width:700px){#booking-dialog .booking-open{display:none}}
+
+/* Opinie klientek */
+.reviews-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;margin-bottom:34px}
+.reviews-list:empty{display:none}
+.review-card{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+.review-card img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.review-body{padding:22px 24px 26px;display:flex;flex-direction:column;gap:10px;flex:1}
+.review-stars{color:#ea008f;letter-spacing:3px;font-size:18px;line-height:1}
+.review-stars .off{color:#e6dfe2}
+.review-body p{margin:0;font-size:15px;line-height:1.65;flex:1}
+.review-body strong{font-size:15px}
+.review-body span{font-size:13px;color:#75646d}
+.reviews-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:30px 34px;background:var(--soft);border-radius:18px}
+.reviews-cta h3{margin:0 0 6px;font-size:22px;letter-spacing:-.5px}
+.reviews-cta p{margin:0;font-size:14px;line-height:1.6;color:#75646d;max-width:560px}
+#review-dialog{width:560px;max-width:calc(100vw - 28px);padding:32px;border-radius:18px;max-height:90dvh}
+#review-dialog .dialog-close{top:20px;right:20px;background:#fff1f7}
+#review-form{display:flex;flex-direction:column;gap:16px}
+#review-form h2{font-size:30px;letter-spacing:-1px;margin:0;padding-right:40px}
+#review-form p{padding:0;margin:0}
+#review-form .review-intro{font-size:13px;color:#75646d;margin-top:-6px}
+#review-form label{display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:600}
+#review-form input[type=text],#review-form select,#review-form textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-size:15px;font-weight:400;background:#fff;color:var(--ink)}
+#review-form textarea{resize:vertical;min-height:110px}
+#review-form input[type=file]{font-size:13px;font-weight:400}
+#review-form .star-input{border:0;padding:0;margin:0;min-width:0}
+#review-form .star-input legend{font-size:13px;font-weight:600;padding:0;margin-bottom:4px}
+#review-form .stars-row{display:flex;flex-direction:row-reverse;justify-content:flex-end;gap:2px}
+#review-form .stars-row input{position:absolute;opacity:0;width:1px;height:1px}
+#review-form .stars-row label{display:inline-block;font-size:36px;line-height:1;color:#e6dfe2;cursor:pointer;font-weight:400;transition:color .15s}
+#review-form .stars-row label:hover,#review-form .stars-row label:hover~label,#review-form .stars-row input:checked~label{color:#ea008f}
+#review-form .stars-row input:focus-visible+label{outline:3px solid #a62866;outline-offset:2px;border-radius:4px}
+#review-dialog img#review-preview{max-height:170px;width:auto;border-radius:12px;align-self:flex-start}
+#review-form label.check{flex-direction:row;align-items:flex-start;gap:10px;font-weight:400;font-size:13px;line-height:1.5}
+#review-form label.check input{margin-top:3px;flex:none;width:18px;height:18px;accent-color:#ea008f}
+#review-form .rodo-small{font-size:11px;line-height:1.55;color:#75646d}
+#review-form .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+#review-status{font-size:14px}
+#review-status:empty{display:none}
+#review-status.error{color:#b3261e}
+#review-form .button{position:static;width:100%;height:auto;border-radius:50px;font-size:14px;padding:19px 26px}
+#review-form .button[disabled]{opacity:.6;cursor:wait;transform:none}
+@media(max-width:700px){.reviews-cta{padding:24px 22px}.reviews-cta .button{width:100%}}
+@media(max-width:500px){#review-dialog{padding:25px 20px}#review-form h2{font-size:26px}}
