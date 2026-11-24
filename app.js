@@ -62,3 +62,22 @@ if(reviewDialog){
         document.querySelector('#review-done').addEventListener('click',()=>reviewDialog.close())})
       .catch(err=>{btn.disabled=false;say(err.message&&err.message.length>5?err.message:'Nie udało się wysłać. Sprawdź internet i spróbuj ponownie.',true)})});
 }
+
+// Opublikowane opinie (publikuje Wiktoria w serwisie zapisów)
+(function(){
+  const list=document.querySelector('#reviews-list');if(!list)return;
+  const API='https://script.google.com/macros/s/AKfycbzL65lTR9fE922_jcW5DAC2MRo5wXjzDJ8ZGI3lnoKFQ0jN7CLqcqyyA6AAy_tlslzD/exec?api=reviews';
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const jsonp=u=>new Promise((ok,fail)=>{const cb='rv'+Date.now(),s=document.createElement('script');window[cb]=d=>{delete window[cb];s.remove();ok(d)};s.onerror=()=>{delete window[cb];s.remove();fail()};s.src=u+'&callback='+cb;document.head.appendChild(s)});
+  fetch(API+'&t='+Date.now()).then(r=>r.json()).catch(()=>jsonp(API)).then(d=>{
+    const rs=(d&&d.reviews)||[];if(!rs.length)return;
+    list.innerHTML=rs.map((r,i)=>'<article class="review-card">'+
+      (r.photo?'<img src="'+esc(r.photo)+'" alt="Stylizacja — opinia '+esc(r.name)+'" loading="lazy" data-i="'+i+'" referrerpolicy="no-referrer">':'')+
+      '<div class="review-body"><div class="review-stars" aria-label="Ocena '+r.rating+' na 5">'+'★'.repeat(r.rating)+'<span class="off">'+'★'.repeat(5-r.rating)+'</span></div>'+
+      '<p>„'+esc(r.text)+'”</p><strong>'+esc(r.name)+'</strong>'+(r.service?'<span>'+esc(r.service)+'</span>':'')+'</div></article>').join('');
+    list.querySelectorAll('img').forEach(img=>{
+      img.addEventListener('error',()=>img.remove());
+      img.addEventListener('click',()=>{const lb=document.querySelector('#lightbox');document.querySelector('#large-photo').src=img.src;document.querySelector('#large-photo').alt=img.alt;document.querySelector('#photo-title').textContent=rs[+img.dataset.i].name;lb.showModal()});
+    });
+  }).catch(()=>{});
+})();

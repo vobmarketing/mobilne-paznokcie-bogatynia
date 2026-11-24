@@ -100,3 +100,4 @@ footer .brand>span>span{font-family:'Playfair Display',Georgia,serif;font-style:
 #review-dialog img#review-preview[hidden]{display:none}
 #review-form label,#review-form input,#review-form select,#review-form textarea{margin:0}
 #review-form{gap:14px}
+.review-card img{cursor:zoom-in}
