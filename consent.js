@@ -1,21 +1,28 @@
 // Zgoda na cookies analityczne (Google Tag Manager / Google Analytics, Yandex Metrica).
-// Liczniki ładują się WYŁĄCZNIE po kliknięciu „Akceptuję”. Wybór: localStorage „mp-consent-v2”, ważny 6 miesięcy.
+// Google Analytics działa w trybie Consent Mode v2 (zaawansowanym): bez zgody — bez cookies i identyfikatorów,
+// tylko anonimowe sygnały do modelowania statystyk. Yandex Metrica ładuje się WYŁĄCZNIE po kliknięciu „Akceptuję”.
+// Wybór: localStorage „mp-consent-v2”, ważny 6 miesięcy.
 (function () {
   var KEY = 'mp-consent-v2', GTM_ID = 'GTM-5TH8W74J', YM_ID = 114504375, MAX_AGE = 180 * 24 * 3600 * 1000;
   window.dataLayer = window.dataLayer || [];
   function gtag() { window.dataLayer.push(arguments); }
   window.gtag = window.gtag || gtag;
   gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+  gtag('set', 'ads_data_redaction', true);
   try { localStorage.removeItem('mp-cookie-notice-v1'); } catch (e) {}
+
+  // Google Tag Manager ładuje się zawsze; dopóki nie ma zgody, GA nie zapisuje cookies (analytics_storage: denied).
+  window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+  (function () {
+    var s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtm.js?id=' + GTM_ID;
+    document.head.appendChild(s);
+  })();
 
   var loaded = false;
   function loadGTM() {
     if (loaded) return; loaded = true;
     gtag('consent', 'update', { analytics_storage: 'granted' });
-    window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-    var s = document.createElement('script'); s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtm.js?id=' + GTM_ID;
-    document.head.appendChild(s);
     loadYM();
   }
   function loadYM() {
