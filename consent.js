@@ -12,6 +12,8 @@
   try { localStorage.removeItem('mp-cookie-notice-v1'); } catch (e) {}
 
   // Google Tag Manager ładuje się zawsze; dopóki nie ma zgody, GA nie zapisuje cookies (analytics_storage: denied).
+  // zgoda udzielona wcześniej — ustawiamy ją PRZED załadowaniem GTM, żeby nie wysyłać dodatkowego sygnału bez zgody
+  if (get() === 'granted') gtag('consent', 'update', { analytics_storage: 'granted' });
   window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
   (function () {
     var s = document.createElement('script'); s.async = true;
