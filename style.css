@@ -97,3 +97,6 @@ footer .brand>span>span{font-family:'Playfair Display',Georgia,serif;font-style:
 #review-form .button[disabled]{opacity:.6;cursor:wait;transform:none}
 @media(max-width:700px){.reviews-cta{padding:24px 22px}.reviews-cta .button{width:100%}}
 @media(max-width:500px){#review-dialog{padding:25px 20px}#review-form h2{font-size:26px}}
+#review-dialog img#review-preview[hidden]{display:none}
+#review-form label,#review-form input,#review-form select,#review-form textarea{margin:0}
+#review-form{gap:14px}
