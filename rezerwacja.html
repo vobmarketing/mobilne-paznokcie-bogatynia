@@ -176,6 +176,8 @@ function apiBook(b){ return fetch(API,{method:'POST',headers:{'Content-Type':'te
 const $ = id => document.getElementById(id);
 const st = { data:null, services:new Set(), date:null, hour:null, month:null, step:1 };
 const pad = n => String(n).padStart(2,'0');
+const tm = h => { const m=Math.round(h*60); return pad(Math.floor(m/60))+':'+pad(m%60); };
+const near = (arr,x) => arr.some(v=>Math.abs(v-x)<1e-6);
 const iso = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
@@ -251,12 +253,12 @@ function drawChips(){
 function dayInfo(dateStr){ return st.data.days.find(d=>d.date===dateStr); }
 function starts(day){
   if(!day||day.off) return [];
-  const d=dur(), hrs=st.data.hours, busy=new Set(day.busy);
+  const d=dur(), hrs=st.data.hours, busy=day.busy, step=(st.data.step||60)/60;
   const limit=new Date(new Date(st.data.now).getTime()+st.data.rules.minBefore*3600e3);
   return hrs.map(h=>{
     let ok=true;
-    for(let k=0;k<d;k++) if(!hrs.includes(h+k)||busy.has(h+k)) ok=false;
-    if(new Date(day.date+'T'+pad(h)+':00:00')<limit) ok=false;
+    for(let k=0;k<d-1e-6;k+=step) if(!near(hrs,h+k)||near(busy,h+k)) ok=false;
+    if(new Date(day.date+'T'+tm(h)+':00')<limit) ok=false;
     return {h,ok};
   });
 }
@@ -304,7 +306,7 @@ function drawTimes(){
   $('dayH').textContent=dt.getDate()+' '+MON_G[dt.getMonth()]+', '+WD[dt.getDay()];
   starts(dayInfo(st.date)).forEach(({h,ok})=>{
     const b=document.createElement('button'); b.type='button';
-    b.className='t'+(h===st.hour?' sel':''); b.textContent=pad(h)+':00'; b.disabled=!ok;
+    b.className='t'+(h===st.hour?' sel':''); b.textContent=tm(h); b.disabled=!ok;
     if(!ok) b.title='Termin niedostępny';
     b.onclick=()=>{ st.hour=h; drawTimes(); validate2(); };
     box.appendChild(b);
@@ -317,7 +319,7 @@ function validate2(){ $('to3').disabled = !(st.date && st.hour!==null); }
 function totalPrice(){ return st.data.services.filter(x=>st.services.has(x.name)).reduce((a,x)=>a+x.price,0); }
 function drawSummary(){
   const dt=new Date(st.date+'T12:00:00');
-  $('summary').innerHTML='<b>'+dt.getDate()+' '+MON_G[dt.getMonth()]+' ('+WD[dt.getDay()]+'), '+pad(st.hour)+':00–'+pad(st.hour+dur())+':00</b><br>'+
+  $('summary').innerHTML='<b>'+dt.getDate()+' '+MON_G[dt.getMonth()]+' ('+WD[dt.getDay()]+'), '+tm(st.hour)+'–'+tm(st.hour+dur())+'</b><br>'+
     esc([...st.services].join(', '))+' · ok. '+totalPrice()+' zł';
 }
 const REQ=[['name',v=>v.trim().length>=2,'Podaj imię.'],
@@ -347,7 +349,7 @@ function submit(){
     if(res&&res.ok){
       const dt=new Date(b.date+'T12:00:00');
       $('s4').innerHTML='<div class="done"><div class="ic">✓</div><h2>Dziękujemy, '+esc(b.name.split(' ')[0])+'!</h2>'+
-        '<p>Twoja wizyta: <b>'+dt.getDate()+' '+MON_G[dt.getMonth()]+', '+pad(b.hour)+':00</b><br>'+esc(b.services.join(', '))+'</p>'+
+        '<p>Twoja wizyta: <b>'+dt.getDate()+' '+MON_G[dt.getMonth()]+', '+tm(b.hour)+'</b><br>'+esc(b.services.join(', '))+'</p>'+
         '<p class="sub">W razie zmiany planów prosimy o kontakt telefoniczny.</p>'+
         '<a class="go" href="./" target="_top">Wróć na stronę główną</a></div>';
       go(4); [1,2,3].forEach(i=>$('b'+i).classList.add('on'));
